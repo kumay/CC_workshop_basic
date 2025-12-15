@@ -2,11 +2,17 @@
 
 ## Table Prep
 
-Create following conectors
-Shoe, Shoe_order, Shoe_customer
+### Get all data
+SELECT * FROM <TABLE name>
 
 
+### DO aggregation
+SELECT * FROM <TABLE name> AS c
+GROUP BY <FIELD name>, .... ;
 
 
+### Simple join
+SELECT COUNT(\*) FROM <TABLE name> AS s
+JOIN <TABLE name> AS c ON s.id = c.id;
 
 

@@ -5,10 +5,10 @@
 ## Connector
 
 ### Datagen connector
-config goes here
+see instruction
 
 ### Postgres source connector
-config see instruction 
+see instruction 
 
 ### Postgres sink connector
-config see instruction 
+see instruction 
