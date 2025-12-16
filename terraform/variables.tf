@@ -15,7 +15,7 @@ variable "confluent_cloud_api_secret" {
 variable "aws_region" {
   description = "The AWS region to deploy resources into"
   type        = string
-  default     = "ap-northeast-1" # Tokyo
+  default     = "us-east-1" # Tokyo
 }
 
 variable "aws_ami_id" {

@@ -2,6 +2,24 @@
 
 ## Table prep
 
+1. open python script and insert credecial
+
+```
+> vi sample_dsp_data.py
+```
+
+2. get RDS(postgresql) data from AWS RDS console
+```
+# --- CONFIGURATION ---
+DB_HOST = ""
+DB_NAME = ""
+DB_USER = ""
+DB_PASS = ""
+
+```
+
+### Memo (What will be created)
+
 -- 1. Customers (Dimension Table)
 -- Used to enrich shipments with contact info and account priority.
 CREATE TABLE customers (
@@ -40,8 +58,13 @@ CREATE TABLE shipments (
     FOREIGN KEY (warehouse_id) REFERENCES warehouses(warehouse_id)
 );
 
-## Flink join example
+## Connector
 
+1. Set up postgresql CDC source connector if had not done yet.
+See 2_connector_workshop for guidance.
+
+
+## Flink join example
 
 ### Simple join
 ```
@@ -75,3 +98,19 @@ GROUP BY
   c.email,
   c.`account_level`;
 ```
+
+## Challenge
+
+1. create table called shipment_count with fields as follows..
+- customer_id : int
+- full_name : string
+- email : string
+- account_level : string
+- shipment_count : int
+
+set customer_id as primary_key
+
+2.  
+
+
+

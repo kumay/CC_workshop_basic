@@ -73,6 +73,8 @@ def create_warehouses(curr):
         sql = """
             INSERT INTO warehouses (warehouse_id, warehouse_name, city, capacity_limit, manager_name, last_maintained)
             VALUES (%s, %s, %s, %s, %s, NOW())
+            ON CONFLICT (warehouse_id)
+            DO NOTHING;
         """
         curr.execute(sql, (
             i, 
@@ -88,6 +90,8 @@ def create_customer(curr, customer_id):
     sql = """
         INSERT INTO customers (customer_id, first_name, last_name, email, address_city, account_level, updated_at)
         VALUES (%s, %s, %s, %s, %s, %s, NOW())
+        ON CONFLICT (customer_id)
+        DO NOTHING;
     """
     account_levels = ['Standard', 'Silver', 'Gold', 'Platinum']
     curr.execute(sql, (

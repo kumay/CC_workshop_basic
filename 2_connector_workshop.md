@@ -1,14 +1,38 @@
 # Connector workshop
 
 
-
 ## Connector
 
 ### Datagen connector
-see instruction
+Create following connectors
+- stock
+- shoe (Create shoe topic)
+- shoe_customer (Create shoe_customer topic)
+- shoe_order (Create shoe_order topic)
 
-### Postgres source connector
-see instruction 
+
+### DB config
+
+DB name = mydb
+DB user = postgres
+password = SuperSecurePassword123!
+
 
 ### Postgres sink connector
-see instruction 
+Create with following settings
+
+"topic": "shoe"
+
+For DB credencials chekc AWS console
+
+
+### Postgres source connector (optional)
+
+"table": "shoe"
+
+For DB credencials chekc AWS console
+
+
+### Postgres CDC source connector (optional)
+
+For DB credencials check AWS console

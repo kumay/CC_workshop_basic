@@ -38,7 +38,7 @@ resource "confluent_environment" "staging" {
 }
 
 resource "confluent_kafka_cluster" "basic" {
-  display_name = "workshop"
+  display_name = "workshop-${random_id.env_display_id.hex}"
   availability = "SINGLE_ZONE"
   cloud        = "AWS"
   region       = var.aws_region
@@ -62,7 +62,7 @@ data "confluent_ip_addresses" "main" {
 # --- 3. Cluster API Key & Role Binding ---
 
 resource "confluent_service_account" "app_manager" {
-  display_name = "app-manager"
+  display_name = "app-manager-${random_id.env_display_id.hex}"
   description  = "Service account for the application"
 }
 
@@ -73,8 +73,8 @@ resource "confluent_role_binding" "app_manager_kafka_cluster_admin" {
 }
 
 resource "confluent_api_key" "app_manager_kafka_api_key" {
-  display_name = "app-manager-kafka-api-key"
-  description  = "Kafka API Key owned by app-manager"
+  display_name = "app-manager-kafka-api-key-${random_id.env_display_id.hex}"
+  description  = "Kafka API Key owned by app-manager-${random_id.env_display_id.hex}"
   owner {
     id          = confluent_service_account.app_manager.id
     api_version = confluent_service_account.app_manager.api_version
@@ -269,11 +269,11 @@ resource "aws_instance" "client" {
     #!/bin/bash
     dnf update -y
     dnf install -y java-17-amazon-corretto-devel postgresql16
-    rpm --import https://packages.confluent.io/rpm/7.5/archive.key
-    printf "[Confluent.dist]\nname=Confluent repository (dist)\nbaseurl=https://packages.confluent.io/rpm/7.5/7\ngpgcheck=1\ngpgkey=https://packages.confluent.io/rpm/7.5/archive.key\nenabled=1\n\n[Confluent]\nname=Confluent repository\nbaseurl=https://packages.confluent.io/rpm/7.5\ngpgcheck=1\ngpgkey=https://packages.confluent.io/rpm/7.5/archive.key\nenabled=1\n" > /etc/yum.repos.d/confluent.repo
-    dnf install -y confluent-cli librdkafka-devel
-    dnf install -y python3-pip python3-devel gcc openssl-devel
+    rpm --import https://packages.confluent.io/rpm/8.1/archive.key
+    printf "[Confluent.dist]\nname=Confluent repository (dist)\nbaseurl=https://packages.confluent.io/rpm/8.1\ngpgcheck=1\ngpgkey=https://packages.confluent.io/rpm/8.1/archive.key\nenabled=1\n\n[Confluent]\nname=Confluent repository\nbaseurl=https://packages.confluent.io/rpm/8.1\ngpgcheck=1\ngpgkey=https://packages.confluent.io/rpm/8.1/archive.key\nenabled=1\n" > /etc/yum.repos.d/confluent.repo
+    dnf install -y confluent-cli python3-pip python3-devel gcc openssl-devel
     pip3 install confluent-kafka psycopg2-binary faker
+    pip3 install --upgrade attrs certifi httpx cachetools authlib fastavro
   EOF
 
   tags = { Name = "Confluent-Client-Producer" }
@@ -291,11 +291,11 @@ resource "aws_instance" "client2" {
     #!/bin/bash
     dnf update -y
     dnf install -y java-17-amazon-corretto-devel postgresql16
-    rpm --import https://packages.confluent.io/rpm/7.5/archive.key
-    printf "[Confluent.dist]\nname=Confluent repository (dist)\nbaseurl=https://packages.confluent.io/rpm/7.5/7\ngpgcheck=1\ngpgkey=https://packages.confluent.io/rpm/7.5/archive.key\nenabled=1\n\n[Confluent]\nname=Confluent repository\nbaseurl=https://packages.confluent.io/rpm/7.5\ngpgcheck=1\ngpgkey=https://packages.confluent.io/rpm/7.5/archive.key\nenabled=1\n" > /etc/yum.repos.d/confluent.repo
-    dnf install -y confluent-cli librdkafka-devel
-    dnf install -y python3-pip python3-devel gcc openssl-devel
+    rpm --import https://packages.confluent.io/rpm/8.1/archive.key
+    printf "[Confluent.dist]\nname=Confluent repository (dist)\nbaseurl=https://packages.confluent.io/rpm/8.1\ngpgcheck=1\ngpgkey=https://packages.confluent.io/rpm/8.1/archive.key\nenabled=1\n\n[Confluent]\nname=Confluent repository\nbaseurl=https://packages.confluent.io/rpm/8.1\ngpgcheck=1\ngpgkey=https://packages.confluent.io/rpm/8.1/archive.key\nenabled=1\n" > /etc/yum.repos.d/confluent.repo
+    dnf install -y confluent-cli python3-pip python3-devel gcc openssl-devel
     pip3 install confluent-kafka psycopg2-binary faker
+    pip3 install --upgrade attrs certifi httpx cachetools authlib fastavro
   EOF
 
   tags = { Name = "Confluent-Client-Consumer" }
@@ -338,18 +338,26 @@ output "ssh_private_key_command" {
   value = "ssh -i confluent-demo-key.pem ec2-user@${aws_instance.client.public_ip}"
 }
 
-resource "local_file" "payment_app_dqr" {
+resource "local_file" "output_file" {
   filename = "./workshop.json"
   content  = <<-EOT
+  # Confluent Cloud
+
   "confluent_environment": ${confluent_environment.staging.display_name}
   "confluent_cluster_bootstrap": ${confluent_kafka_cluster.basic.bootstrap_endpoint}
   "confluent_api_key": ${confluent_api_key.app_manager_kafka_api_key.id}
   "confluent_api_secret": ${confluent_api_key.app_manager_kafka_api_key.secret}
-  "aurora_endpoint": ${aws_rds_cluster.postgresql.endpoint}
-  "client_public_ip": ${aws_instance.client.public_ip}
+
+  # AWS
+  
+  # EC2
+  "producer_public_ip": ${aws_instance.client.public_ip}
   "consumer_public_ip": ${aws_instance.client2.public_ip}
-  "ssh_private_key_command (client)": "ssh -i confluent-demo-key.pem ec2-user@${aws_instance.client.public_ip}"
+  "ssh_private_key_command (producer)": "ssh -i confluent-demo-key.pem ec2-user@${aws_instance.client.public_ip}"
   "ssh_private_key_command (consumer)": "ssh -i confluent-demo-key.pem ec2-user@${aws_instance.client2.public_ip}"
+
+  # Postgres
+  "aurora_endpoint": ${aws_rds_cluster.postgresql.endpoint}
   "psql_command": "psql -h ${aws_rds_cluster.postgresql.endpoint} -p 5432 -U ${var.db_username} -d ${var.db_name}"
   "postgres_user_password":"${var.db_username}, ${var.db_password}"
   EOT

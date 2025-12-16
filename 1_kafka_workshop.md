@@ -1,11 +1,18 @@
 # Kafka workshop
 
+Do this in CC_workshop_basic directory
+
 ## Create Topic
 
 ### Insert data to topic
 Browser
 
 ### Prerequisite
+
+
+1. Download Cluster apikey
+Environment -> Cluster -> API Keys (left navigation) -> Add key (Button)
+Create and download
 
 ```
 
@@ -16,7 +23,6 @@ confluent kafka cluster use <lkc-xxxxxx>
 confluent api-key store --resource <lkc-xxxxxx> <key> <secret>
 
 confluent api-key use <key>
-
 
 ```
 
@@ -38,8 +44,6 @@ confluent kafka topic produce <topic-name> \
 
 **Just Consume**
 confluent kafka topic consume <topic-name> --from-beginning
-
-
 
 
 ### Insert schema message
@@ -83,5 +87,13 @@ confluent kafka topic consume <topic-name> \
 
 
 ### Python Producer
+
+1. open sample_avro.py
+
+```
+> vi sample_avro.py
+```
+
+
 
 sample_avro.py
