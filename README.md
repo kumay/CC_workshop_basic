@@ -64,8 +64,13 @@ terraform/
 
 ### Terraformの実行
 
+1. 以下の手順で**Cloud resource management**のapikeyを作成してダウンロードする。
+https://docs.confluent.io/cloud/current/security/authenticate/workload-identities/service-accounts/api-keys/manage-api-keys.html#add-an-api-key
+
+
+2. ConfluentのCloud api用のapikey/secretを環境変数に設定。
 ```
-ConfluentのCloud api用のapikey/secretを環境変数に設定。
+
 
 # Linux
 > export TF_VAR_confluent_cloud_api_key="your_actual_api_key"
@@ -88,7 +93,11 @@ $Env:AWS_DEFAULT_REGION="us-east-1"
 $Env:AWS_ACCESS_KEY_ID="<AWS Consoleから取得>"
 $Env:AWS_SECRET_ACCESS_KEY="<AWS Consoleから取得>"
 $Env:AWS_SESSION_TOKEN="<AWS Consoleから取得>"
+```
 
+3. Terraformで環境作成
+
+```
 
 terraformディレクトリに移動
 > cd terraform

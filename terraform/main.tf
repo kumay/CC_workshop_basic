@@ -339,7 +339,7 @@ output "ssh_private_key_command" {
 }
 
 resource "local_file" "output_file" {
-  filename = "./workshop.json"
+  filename = "./workshop.txt"
   content  = <<-EOT
   # Confluent Cloud
 
