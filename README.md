@@ -43,6 +43,8 @@ RDS instance :
 
 内容チェック
 ```
+> unzip main.zip
+
 > cd CC_workshop_basic
 
 > ls
