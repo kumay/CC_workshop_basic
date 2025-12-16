@@ -109,6 +109,12 @@ terraformの実行（環境作成）
 > terraform destroy
 ```
 
+### 確認事項
+
+作成後にworkshop.txtというファイルが出力されます。
+**confluent_environment**
+の値を確認してください、環境が構築された環境の名前になります。
+
 
 ### 環境の動作確認
 
