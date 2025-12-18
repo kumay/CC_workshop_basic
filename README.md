@@ -111,7 +111,7 @@ terraformの実行準備
 
 
 terraformの実行（環境作成）
-> terrafrom apply
+> terraform apply
 
 
 作成環境の削除

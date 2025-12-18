@@ -6,6 +6,18 @@
 Model: Claude Sonnet 4.5 (JP)
 
 
+https://bedrock-runtime.us-east-1.amazonaws.com/model/my-model/invoke
+
+
+https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-7-sonnet-20250219-v1:0/invoke
+
+
+
+https://bedrock-runtime.us-east-1.amazonaws.com/model/amazon.titan-embed-text-v2:0/invoke
+
+
+https://bedrock-runtime.us-east-1.amazonaws.com/model/amazon.titan-text-express-v1/invoke
+
 ### Sample System Prompt
 
 ```

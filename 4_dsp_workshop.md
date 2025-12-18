@@ -108,9 +108,50 @@ GROUP BY
 - account_level : string
 - shipment_count : int
 
+```
+CREATE TABLE shipment_count(
+  customer_id INT NOT NULL,
+  name string,
+  email string,
+  account_level string,
+  shipment_count BIGINT,
+  PRIMARY KEY (customer_id) NOT ENFORCED
+) WITH (
+  'changelog.mode' = 'upsert',
+  'kafka.cleanup-policy' = 'compact'
+) 
+```
+
 set customer_id as primary_key
 
-2.  
+```
+INSERT INTO `shipment_count`
+SELECT   
+    c.customer_id AS customer_id,
+    c.last_name || ' ' || c.first_name  AS name,
+    c.email AS email,
+    c.account_level AS account_level,
+    COUNT(s.customer_id) AS shipment_count
+FROM `ws.public.shipments` AS s
+LEFT JOIN `ws.public.customers` AS c ON s.customer_id = c.customer_id
+WHERE s.status = 'CREATED' AND c.customer_id IS NOT NULL
+GROUP BY 
+  c.customer_id, 
+  c.last_name, 
+  c.first_name, 
+  c.email,
+  c.`account_level`;
+```
+
+
+2. check topic
+
+
+
+3. create postgresql sink connector
+
+
+
 
 
 
