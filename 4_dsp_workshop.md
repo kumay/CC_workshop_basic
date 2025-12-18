@@ -132,8 +132,8 @@ SELECT
     c.email AS email,
     c.account_level AS account_level,
     COUNT(s.customer_id) AS shipment_count
-FROM `ws.public.shipments` AS s
-LEFT JOIN `ws.public.customers` AS c ON s.customer_id = c.customer_id
+FROM `cdc.public.shipments` AS s
+LEFT JOIN `cdc.public.customers` AS c ON s.customer_id = c.customer_id
 WHERE s.status = 'CREATED' AND c.customer_id IS NOT NULL
 GROUP BY 
   c.customer_id, 
